@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI Calculator with Sliders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .calculator-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 50px;
+        }
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+            color: #333;
+            display: block;
+        }
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            margin-left: 10px;
+            text-align: center;
+        }
+        .slider-value {
+            text-align: right;
+            font-size: 14px;
+            color: #666;
+        }
+        .output {
+            font-size: 20px;
+            color: #333;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Copyright Section */
+        footer {
+            background-color: #333;
+            color: #fff;
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-container">
+    <h2>EMI Calculator</h2>
+    
+    <div class="form-group">
+        <label for="loanAmount">Loan Amount (₹):</label>
+        <input type="range" id="loanAmount" min="50000" max="10000000" value="50000" step="1000" oninput="updateLoan()">
+        <input type="number" id="loanAmountValue" value="50000" oninput="updateLoanSlider()">
+        <p class="slider-value" id="loanAmountValueLabel">₹50,000</p>
+    </div>
+    
+    <div class="form-group">
+        <label for="interestRate">Rate of Interest (% per annum):</label>
+        <input type="range" id="interestRate" min="12" max="25" value="12" step="0.1" oninput="updateRate()">
+        <input type="number" id="interestRateValue" value="12" oninput="updateRateSlider()">
+        <p class="slider-value" id="interestRateValueLabel">12%</p>
+    </div>
+    
+    <div class="form-group">
+        <label for="loanTenure">Loan Tenure (Months):</label>
+        <input type="range" id="loanTenure" min="12" max="120" value="12" step="1" oninput="updateTenure()">
+        <input type="number" id="loanTenureValue" value="12" oninput="updateTenureSlider()">
+        <p class="slider-value" id="loanTenureValueLabel">12 months</p>
+    </div>
+
+    <div class="output">
+        <p id="emiResult">Monthly EMI: ₹0</p>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 <a href="https://www.linkedin.com/in/sailokesh-singh-rajaputra/" target="_blank">RAJAPUTRA SAI LOKESH SINGH</a>. All rights reserved.</p>
+</footer>
+
+<script>
+    function updateLoan() {
+        const loanAmount = document.getElementById('loanAmount').value;
+        document.getElementById('loanAmountValue').value = loanAmount;
+        document.getElementById('loanAmountValueLabel').textContent = "₹" + loanAmount;
+        calculateEMI();
+    }
+
+    function updateLoanSlider() {
+        const loanAmountValue = document.getElementById('loanAmountValue').value;
+        document.getElementById('loanAmount').value = loanAmountValue;
+        document.getElementById('loanAmountValueLabel').textContent = "₹" + loanAmountValue;
+        calculateEMI();
+    }
+
+    function updateRate() {
+        const interestRate = document.getElementById('interestRate').value;
+        document.getElementById('interestRateValue').value = interestRate;
+        document.getElementById('interestRateValueLabel').textContent = interestRate + "%";
+        calculateEMI();
+    }
+
+    function updateRateSlider() {
+        const interestRateValue = document.getElementById('interestRateValue').value;
+        document.getElementById('interestRate').value = interestRateValue;
+        document.getElementById('interestRateValueLabel').textContent = interestRateValue + "%";
+        calculateEMI();
+    }
+
+    function updateTenure() {
+        const loanTenure = document.getElementById('loanTenure').value;
+        document.getElementById('loanTenureValue').value = loanTenure;
+        document.getElementById('loanTenureValueLabel').textContent = loanTenure + " months";
+        calculateEMI();
+    }
+
+    function updateTenureSlider() {
+        const loanTenureValue = document.getElementById('loanTenureValue').value;
+        document.getElementById('loanTenure').value = loanTenureValue;
+        document.getElementById('loanTenureValueLabel').textContent = loanTenureValue + " months";
+        calculateEMI();
+    }
+
+    function calculateEMI() {
+        const principal = parseFloat(document.getElementById('loanAmount').value);
+        const rateOfInterest = parseFloat(document.getElementById('interestRate').value);
+        const tenure = parseInt(document.getElementById('loanTenure').value);
+
+        // Validate inputs
+        if (!principal || !rateOfInterest || !tenure) {
+            alert("Please enter all values.");
+            return;
+        }
+
+        // Calculate monthly interest rate
+        const monthlyRate = rateOfInterest / 12 / 100;
+
+        // Calculate EMI using the formula
+        const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenure)) / (Math.pow(1 + monthlyRate, tenure) - 1);
+
+        // Display the result
+        if (emi) {
+            document.getElementById('emiResult').textContent = `Monthly EMI: ₹${emi.toFixed(2)}`;
+        } else {
+            document.getElementById('emiResult').textContent = `Invalid input values.`;
+        }
+    }
+
+    // Initialize EMI calculation on page load
+    calculateEMI();
+</script>
+
+</body>
+</html>
+
