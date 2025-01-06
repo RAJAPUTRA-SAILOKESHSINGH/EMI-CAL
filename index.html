@@ -24,6 +24,7 @@
             width: 100%;
             max-width: 500px;
             margin-bottom: 50px;
+            box-sizing: border-box;
         }
         h2 {
             text-align: center;
@@ -69,6 +70,7 @@
             position: fixed;
             bottom: 0;
             left: 0;
+            box-sizing: border-box;
         }
         footer a {
             color: #4CAF50;
@@ -77,6 +79,29 @@
         }
         footer a:hover {
             text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .calculator-container {
+                padding: 20px;
+                margin-bottom: 30px;
+            }
+            h2 {
+                font-size: 18px;
+            }
+            .output p {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            input[type="number"] {
+                width: 50px;
+            }
+            .output p {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -189,4 +214,3 @@
 
 </body>
 </html>
-
